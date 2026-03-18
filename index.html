@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>P-Patrol Control Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🦟 P-Patrol Control Panel</h1>
+            <p>ESP8266 Pesticide Sprayer System</p>
+            <div class="connection-status" id="connectionStatus">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">Connecting...</span>
+            </div>
+        </div>
+        
+        <div class="status-grid">
+            <div class="status-card" id="systemStatus">
+                <h3>System Status</h3>
+                <p id="systemState">Loading...</p>
+                <small id="systemUptime"></small>
+            </div>
+            <div class="status-card" id="ledStatus">
+                <h3>40W LED Panel</h3>
+                <p id="ledState">Loading...</p>
+                <small>Pest Attraction Light</small>
+            </div>
+            <div class="status-card" id="pumpStatus">
+                <h3>Spray Pump</h3>
+                <p id="pumpState">Loading...</p>
+                <small>12V Submersible Pump</small>
+            </div>
+            <div class="status-card" id="pirStatus">
+                <h3>PIR Motion Sensor</h3>
+                <p id="pirState">Loading...</p>
+                <small>Pest Detection</small>
+            </div>
+        </div>
+        
+        <div class="status-grid">
+            <div class="status-card">
+                <h3>Battery System</h3>
+                <div class="battery-indicator">
+                    <div class="battery-level" id="batteryBar"></div>
+                </div>
+                <p id="batteryLevel">Loading...</p>
+                <small>Triple-Battery SYS HV</small>
+            </div>
+            <div class="status-card">
+                <h3>Spray Sessions</h3>
+                <p id="sprayCount">Loading...</p>
+                <small>Total activations</small>
+            </div>
+            <div class="status-card">
+                <h3>Motion Detections</h3>
+                <p id="pirCount">Loading...</p>
+                <small>PIR triggers today</small>
+            </div>
+            <div class="status-card">
+                <h3>Current Time</h3>
+                <p id="currentTime">Loading...</p>
+                <small id="operatingHours">Operating: 9PM - 12AM</small>
+            </div>
+        </div>
+        
+        <!-- Manual Controls (shown only in manual mode) -->
+        <div class="controls" id="manualControls" style="display:none;">
+            <h3>🔧 Manual Controls</h3>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="toggleLED()">
+                    <span id="ledButtonText">Toggle LED</span>
+                </button>
+                <button class="btn btn-danger" onclick="togglePump()">
+                    <span id="pumpButtonText">Toggle Pump</span>
+                </button>
+                <button class="btn btn-secondary" onclick="exitManualMode()">
+                    Exit Manual Mode
+                </button>
+            </div>
+        </div>
+        
+        <!-- Configuration Panel -->
+        <div class="config-panel" id="configPanel">
+            <h3>⚙️ Configuration</h3>
+            <div class="config-grid">
+                <div class="config-item">
+                    <label>Start Hour (24h format):</label>
+                    <input type="number" id="startHour" min="0" max="23" value="21">
+                </div>
+                <div class="config-item">
+                    <label>End Hour (24h format):</label>
+                    <input type="number" id="endHour" min="1" max="24" value="24">
+                </div>
+                <div class="config-item">
+                    <label>Spray Pulse Duration (ms):</label>
+                    <input type="number" id="sprayDuration" min="1000" max="30000" value="5000">
+                </div>
+                <div class="config-item">
+                    <button class="btn btn-success" onclick="saveConfiguration()">Save Config</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- System Log -->
+        <div class="log-section">
+            <h3>📊 System Activity</h3>
+            <div class="log-container">
+                <div id="lastActivity">Last Activity: Loading...</div>
+                <div class="log-stats">
+                    <span>Session Duration: <span id="sessionDuration">--</span></span>
+                    <span>Next Operation: <span id="nextOperation">--</span></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>P-Patrol Solar-Powered Pesticide Sprayer System</p>
+            <small>Pyrethrin solution dispersal system with PIR motion detection</small>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
