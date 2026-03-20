@@ -3,125 +3,135 @@
 <head>
     <title>P-Patrol Control Panel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { font-family: Arial; margin: 0; padding: 20px; background: #f0f0f0; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; color: #2c3e50; margin-bottom: 30px; }
+        .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .status-card { background: #ecf0f1; padding: 15px; border-radius: 8px; text-align: center; }
+        .status-card.active { background: #d5f4e6; border: 2px solid #27ae60; }
+        .status-card.inactive { background: #fadbd8; border: 2px solid #e74c3c; }
+        .controls { margin-top: 20px; }
+        .btn { padding: 10px 20px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-success { background: #27ae60; color: white; }
+        #lastActivity { font-style: italic; color: #7f8c8d; margin-top: 10px; }
+    </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>🦟 P-Patrol Control Panel</h1>
             <p>ESP8266 Pesticide Sprayer System</p>
-            <div class="connection-status" id="connectionStatus">
-                <span class="status-dot" id="statusDot"></span>
-                <span id="statusText">Connecting...</span>
-            </div>
         </div>
         
         <div class="status-grid">
             <div class="status-card" id="systemStatus">
                 <h3>System Status</h3>
                 <p id="systemState">Loading...</p>
-                <small id="systemUptime"></small>
             </div>
             <div class="status-card" id="ledStatus">
-                <h3>40W LED Panel</h3>
+                <h3>LED Panel</h3>
                 <p id="ledState">Loading...</p>
-                <small>Pest Attraction Light</small>
             </div>
             <div class="status-card" id="pumpStatus">
                 <h3>Spray Pump</h3>
                 <p id="pumpState">Loading...</p>
-                <small>12V Submersible Pump</small>
             </div>
             <div class="status-card" id="pirStatus">
-                <h3>PIR Motion Sensor</h3>
+                <h3>Motion Sensor</h3>
                 <p id="pirState">Loading...</p>
-                <small>Pest Detection</small>
             </div>
         </div>
         
         <div class="status-grid">
             <div class="status-card">
-                <h3>Battery System</h3>
-                <div class="battery-indicator">
-                    <div class="battery-level" id="batteryBar"></div>
-                </div>
+                <h3>Battery Level</h3>
                 <p id="batteryLevel">Loading...</p>
-                <small>Triple-Battery SYS HV</small>
             </div>
             <div class="status-card">
-                <h3>Spray Sessions</h3>
+                <h3>Spray Count</h3>
                 <p id="sprayCount">Loading...</p>
-                <small>Total activations</small>
             </div>
             <div class="status-card">
-                <h3>Motion Detections</h3>
+                <h3>PIR Triggers</h3>
                 <p id="pirCount">Loading...</p>
-                <small>PIR triggers today</small>
             </div>
             <div class="status-card">
                 <h3>Current Time</h3>
                 <p id="currentTime">Loading...</p>
-                <small id="operatingHours">Operating: 9PM - 12AM</small>
             </div>
         </div>
         
-        <!-- Manual Controls (shown only in manual mode) -->
         <div class="controls" id="manualControls" style="display:none;">
-            <h3>🔧 Manual Controls</h3>
-            <div class="button-group">
-                <button class="btn btn-primary" onclick="toggleLED()">
-                    <span id="ledButtonText">Toggle LED</span>
-                </button>
-                <button class="btn btn-danger" onclick="togglePump()">
-                    <span id="pumpButtonText">Toggle Pump</span>
-                </button>
-                <button class="btn btn-secondary" onclick="exitManualMode()">
-                    Exit Manual Mode
-                </button>
-            </div>
+            <h3>Manual Controls</h3>
+            client.println("<button class='btn btn-primary' onclick='toggleLED()'>Toggle LED</button>");
+client.println("<button class='btn btn-danger' onclick='togglePump()'>Toggle Pump</button>")
         </div>
         
-        <!-- Configuration Panel -->
-        <div class="config-panel" id="configPanel">
-            <h3>⚙️ Configuration</h3>
-            <div class="config-grid">
-                <div class="config-item">
-                    <label>Start Hour (24h format):</label>
-                    <input type="number" id="startHour" min="0" max="23" value="21">
-                </div>
-                <div class="config-item">
-                    <label>End Hour (24h format):</label>
-                    <input type="number" id="endHour" min="1" max="24" value="24">
-                </div>
-                <div class="config-item">
-                    <label>Spray Pulse Duration (ms):</label>
-                    <input type="number" id="sprayDuration" min="1000" max="30000" value="5000">
-                </div>
-                <div class="config-item">
-                    <button class="btn btn-success" onclick="saveConfiguration()">Save Config</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- System Log -->
-        <div class="log-section">
-            <h3>📊 System Activity</h3>
-            <div class="log-container">
-                <div id="lastActivity">Last Activity: Loading...</div>
-                <div class="log-stats">
-                    <span>Session Duration: <span id="sessionDuration">--</span></span>
-                    <span>Next Operation: <span id="nextOperation">--</span></span>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Footer -->
-        <div class="footer">
-            <p>P-Patrol Solar-Powered Pesticide Sprayer System</p>
-            <small>Pyrethrin solution dispersal system with PIR motion detection</small>
-        </div>
+        <div id="lastActivity">Last Activity: Loading...</div>
     </div>
 
-    <script src="script.js"></script>
-</body>
+    <script>
+        function updateStatus() {
+            fetch('/api/status')
+            .then(response => response.json())
+            .then(data => {
+                // Update system status
+                const systemCard = document.getElementById('systemStatus');
+                document.getElementById('systemState').textContent = data.systemActive ? 'ACTIVE' : 'INACTIVE';
+                systemCard.className = 'status-card ' + (data.systemActive ? 'active' : 'inactive');
+                
+                // Update LED status
+                const ledCard = document.getElementById('ledStatus');
+                document.getElementById('ledState').textContent = data.ledActive ? 'ON' : 'OFF';
+                ledCard.className = 'status-card ' + (data.ledActive ? 'active' : 'inactive');
+                
+                // Update pump status
+                const pumpCard = document.getElementById('pumpStatus');
+                document.getElementById('pumpState').textContent = data.pumpActive ? 'SPRAYING' : 'OFF';
+                pumpCard.className = 'status-card ' + (data.pumpActive ? 'active' : 'inactive');
+                
+                // Update PIR status
+                const pirCard = document.getElementById('pirStatus');
+                document.getElementById('pirState').textContent = data.pirDetection ? 'MOTION DETECTED' : 'NO MOTION';
+                pirCard.className = 'status-card ' + (data.pirDetection ? 'active' : 'inactive');
+                
+                // Update other values
+                document.getElementById('batteryLevel').textContent = data.batteryVoltage.toFixed(2) + 'V';
+                document.getElementById('sprayCount').textContent = data.sprayCount;
+                document.getElementById('pirCount').textContent = data.pirTriggerCount;
+                document.getElementById('currentTime').textContent = data.currentTime;
+                document.getElementById('lastActivity').textContent = 'Last Activity: ' + data.lastActivity;
+                
+                // Show/hide manual controls
+                const manualControls = document.getElementById('manualControls');
+                manualControls.style.display = data.manualMode ? 'block' : 'none';
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        
+        function toggleLED() {
+            fetch('/api/manual/led', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'state=true'
+            });
+        }
+        
+        server.send(200, "text/html", R"rawliteral(
+<html>
+  <body>
+    <script>
+      function togglePump() {
+        fetch('/api/manual/pump', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: 'state=true'
+        });
+      }
+      setInterval(updateStatus, 2000);
+    </script>
+  </body>
 </html>
